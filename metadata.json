@@ -1,0 +1,6 @@
+{
+  "name": "Telugu Melody Decoder - College Fest Quiz & Buzzer Arena",
+  "description": "Interactive college event platform to decode Telugu songs from English translated lyrics featuring Easy, Medium, Hard and Tie-breaker rounds, live team buzzer, synchronized timers, and admin control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
