@@ -17,12 +17,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, teams }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Quick preset team selector
-  const handleQuickSelectTeam = (t: Team) => {
-    setTeamName(t.teamName);
-    setLeaderName(t.leaderName);
-    setTeamPassword('pass123'); // default password
-  };
+
 
   const handleTeamSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,27 +192,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, teams }) => {
               <span>{isLoading ? 'Entering Arena...' : 'Login & Open Buzzer'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
-
-            {/* Quick pre-made teams quick-fill for easy demonstration */}
-            {teams.length > 0 && (
-              <div className="pt-3 border-t border-slate-800 space-y-2">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Quick Select Demo Team:
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {teams.slice(0, 3).map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => handleQuickSelectTeam(t)}
-                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-700 cursor-pointer"
-                    >
-                      {t.teamName}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </form>
         ) : (
           /* ADMIN LOGIN FORM */
@@ -231,15 +205,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, teams }) => {
                 <input
                   type="password"
                   required
-                  placeholder="Enter admin password (e.g. admin123)"
+                  placeholder="Enter admin password"
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
                   className="w-full pl-9 p-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">
-                Default password: <code className="text-amber-400 font-mono">admin123</code> or <code className="text-amber-400 font-mono">admin</code>
-              </p>
             </div>
 
             <button

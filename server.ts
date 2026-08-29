@@ -68,7 +68,7 @@ const teamCredentials: Record<string, string> = {
   'team-3': 'pass123'
 };
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+let currentAdminPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
 // Game State
 let gameState: GameState = {
@@ -184,7 +184,7 @@ app.get('/api/game/state', (req, res) => {
 // Admin Auth Check / Login
 app.post('/api/auth/admin-login', (req, res) => {
   const { password } = req.body;
-  if (password === ADMIN_PASSWORD || password === 'admin' || password === 'fest2026') {
+  if (password === currentAdminPassword) {
     return res.json({ success: true, message: 'Admin authenticated', role: 'admin' });
   }
   return res.status(401).json({ success: false, message: 'Invalid Admin Password' });
@@ -621,6 +621,22 @@ app.post('/api/admin/teams', (req, res) => {
   broadcastState();
 
   res.json({ success: true, team: newTeam, teams });
+});
+
+// Admin: Change Admin Password
+app.post('/api/admin/change-password', (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (currentPassword !== currentAdminPassword) {
+    return res.status(401).json({ success: false, message: 'Current admin password is incorrect' });
+  }
+
+  if (!newPassword || newPassword.trim().length < 3) {
+    return res.status(400).json({ success: false, message: 'New password must be at least 3 characters long' });
+  }
+
+  currentAdminPassword = newPassword.trim();
+  res.json({ success: true, message: 'Admin password successfully updated' });
 });
 
 // ------------------------------------

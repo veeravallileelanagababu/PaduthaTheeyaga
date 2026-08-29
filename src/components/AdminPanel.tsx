@@ -28,7 +28,8 @@ import {
   Film,
   Lock,
   Unlock,
-  AlertTriangle
+  AlertTriangle,
+  Key
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -160,6 +161,61 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       }
     } catch {
       setAddError('Server connection error.');
+    }
+  };
+
+  // Change Admin Password State
+  const [isChangePassOpen, setIsChangePassOpen] = useState(false);
+  const [currAdminPass, setCurrAdminPass] = useState('');
+  const [newAdminPass, setNewAdminPass] = useState('');
+  const [confirmAdminPass, setConfirmAdminPass] = useState('');
+  const [passError, setPassError] = useState('');
+  const [passSuccess, setPassSuccess] = useState('');
+  const [isPassLoading, setIsPassLoading] = useState(false);
+
+  const handleChangeAdminPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPassError('');
+    setPassSuccess('');
+
+    if (newAdminPass !== confirmAdminPass) {
+      setPassError('New passwords do not match!');
+      return;
+    }
+
+    if (newAdminPass.length < 3) {
+      setPassError('Password must be at least 3 characters.');
+      return;
+    }
+
+    setIsPassLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: currAdminPass,
+          newPassword: newAdminPass
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPassSuccess('Admin password updated successfully!');
+        setCurrAdminPass('');
+        setNewAdminPass('');
+        setConfirmAdminPass('');
+        setTimeout(() => {
+          setIsChangePassOpen(false);
+          setPassSuccess('');
+        }, 1500);
+      } else {
+        setPassError(data.message || 'Failed to update password.');
+      }
+    } catch {
+      setPassError('Server connection error.');
+    } finally {
+      setIsPassLoading(false);
     }
   };
 
@@ -414,6 +470,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            id="change-admin-pass-btn"
+            type="button"
+            onClick={() => setIsChangePassOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 transition cursor-pointer"
+          >
+            <Key className="w-4 h-4 text-amber-400" />
+            <span>Change Password</span>
+          </button>
+
           <button
             id="open-projector-btn"
             type="button"
@@ -1493,6 +1559,103 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg shadow-amber-500/20 cursor-pointer"
                 >
                   Add Team
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Change Admin Password Modal */}
+      {isChangePassOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-4 relative">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <Lock className="w-5 h-5 text-amber-400" />
+                <h3 className="text-lg font-black text-white">Change Admin Password</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsChangePassOpen(false);
+                  setPassError('');
+                  setPassSuccess('');
+                }}
+                className="text-slate-400 hover:text-white p-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {passError && (
+              <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-500 text-rose-200 text-xs font-semibold text-center">
+                {passError}
+              </div>
+            )}
+
+            {passSuccess && (
+              <div className="p-3 rounded-xl bg-emerald-950/80 border border-emerald-500 text-emerald-200 text-xs font-semibold text-center">
+                {passSuccess}
+              </div>
+            )}
+
+            <form onSubmit={handleChangeAdminPassword} className="space-y-3">
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">
+                  Current Admin Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter current password"
+                  value={currAdminPass}
+                  onChange={(e) => setCurrAdminPass(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 text-sm focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">
+                  New Admin Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter new password"
+                  value={newAdminPass}
+                  onChange={(e) => setNewAdminPass(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 text-sm focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">
+                  Confirm New Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Re-enter new password"
+                  value={confirmAdminPass}
+                  onChange={(e) => setConfirmAdminPass(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 text-sm focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setIsChangePassOpen(false)}
+                  className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPassLoading}
+                  className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg shadow-amber-500/20 cursor-pointer"
+                >
+                  {isPassLoading ? 'Updating...' : 'Update Password'}
                 </button>
               </div>
             </form>
