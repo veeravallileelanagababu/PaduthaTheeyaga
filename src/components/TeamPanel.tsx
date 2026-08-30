@@ -37,7 +37,6 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
   const isLocked = gameState.lockedTeams.includes(currentTeam.id);
   const isCurrentTeamBuzzed = gameState.buzzedTeam?.teamId === currentTeam.id;
   const buzzedTeamName = gameState.buzzedTeam?.teamName;
-  const isTie = gameState.isTieBreakDetected;
   const roundInfo = ROUND_CONFIG[gameState.currentRound] || ROUND_CONFIG.easy;
 
   // Sorting for current rank
@@ -139,17 +138,10 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
               buzzedTeamName={buzzedTeamName}
               isCurrentTeamBuzzed={isCurrentTeamBuzzed}
               isLocked={isLocked}
-              isTie={isTie}
+              isTie={false}
               status={gameState.status}
               myTeamName={currentTeam.teamName}
             />
-
-            {/* Tie Break Alert Indicator */}
-            {isTie && (
-              <div className="mt-4 p-3 rounded-2xl bg-purple-950/80 border border-purple-500 text-purple-200 text-xs text-center font-bold animate-pulse">
-                ⚡ TIE BREAK IN EFFECT: Both teams buzzed simultaneously!
-              </div>
-            )}
           </div>
         </div>
 

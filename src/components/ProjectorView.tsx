@@ -67,15 +67,11 @@ export const ProjectorView: React.FC<ProjectorViewProps> = ({
         </div>
       </header>
 
-      {/* Buzzer Alert Banner (When Buzzed or Tie) */}
+      {/* Buzzer Alert Banner (When Buzzed) */}
       {gameState.buzzedTeam && (
         <div
           id="projector-buzzer-alert"
-          className={`my-3 p-4 rounded-2xl border-2 flex items-center justify-between shadow-2xl animate-in zoom-in-95 duration-200 relative z-20 ${
-            gameState.isTieBreakDetected
-              ? 'bg-purple-950/90 border-purple-400 text-purple-200 shadow-purple-950/80'
-              : 'bg-rose-950/90 border-rose-500 text-white shadow-rose-950/80'
-          }`}
+          className="my-3 p-4 rounded-2xl border-2 flex items-center justify-between shadow-2xl animate-in zoom-in-95 duration-200 relative z-20 bg-rose-950/90 border-rose-500 text-white shadow-rose-950/80"
         >
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-xl bg-white/10">
@@ -83,10 +79,10 @@ export const ProjectorView: React.FC<ProjectorViewProps> = ({
             </div>
             <div>
               <div className="text-xs uppercase tracking-widest font-black text-yellow-400">
-                {gameState.isTieBreakDetected ? '⚡ TIE BREAK ALERT (Simultaneous Buzz)' : '🚨 BUZZER CLAIMED! TIMER PAUSED'}
+                🚨 BUZZER CLAIMED! TIMER PAUSED
               </div>
               <div className="text-3xl font-black tracking-tight">
-                {gameState.isTieBreakDetected ? gameState.tieTeams.join(' & ') : gameState.buzzedTeam.teamName}
+                {gameState.buzzedTeam.teamName}
               </div>
             </div>
           </div>

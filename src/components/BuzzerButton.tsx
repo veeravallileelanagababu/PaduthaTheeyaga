@@ -49,7 +49,7 @@ export const BuzzerButton: React.FC<BuzzerButtonProps> = ({
     subLabel = 'Wrong answer submitted. Unlocks for next song.';
   } else if (isCurrentTeamBuzzed) {
     buttonTheme = 'success';
-    buttonLabel = isTie ? '⚡ TIE BREAK BUZZ!' : '🎉 YOU BUZZED #1!';
+    buttonLabel = '🎉 YOU BUZZED #1!';
     subLabel = 'Timer paused! State your song name & movie now!';
   } else if (buzzedTeamName) {
     buttonTheme = 'other-buzzed';

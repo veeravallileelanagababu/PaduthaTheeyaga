@@ -1,4 +1,4 @@
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'tie-break';
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface Song {
   id: string;
@@ -36,7 +36,7 @@ export interface BuzzEvent {
   serverTimestamp: number;
   timeRemaining: number;
   reactionTimeMs: number;
-  isTie: boolean;
+  isTie?: boolean;
   tieWithTeams?: string[];
 }
 
@@ -51,8 +51,8 @@ export interface GameState {
   timerStartedAt: number | null;
   buzzedTeam: BuzzEvent | null;
   buzzerQueue: BuzzEvent[];
-  isTieBreakDetected: boolean;
-  tieTeams: string[];
+  isTieBreakDetected?: boolean;
+  tieTeams?: string[];
   lockedTeams: string[];
   solvedSongsCount: number;
   recentActivity: string;

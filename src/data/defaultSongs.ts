@@ -259,50 +259,50 @@ export const DEFAULT_SONGS: Song[] = [
     year: '2005'
   },
 
-  // --- TIE-BREAKER ROUND (120 seconds / 2 minutes) ---
+  // --- HARD ROUND EXTENDED SONGS (120 seconds / 2 minutes) ---
   {
-    id: 'tie-1',
+    id: 'hard-ext-1',
     title: 'Kaanunna Kalyanam',
     movie: 'Sita Ramam (2022)',
     originalTeluguLyric: 'కానున్న కళ్యాణం ముందెన్నడూ లేని వైభోగమా.. ఆకాశమే నేలకి దిగి వచ్చి సాక్ష్యం పలికే క్షణమా..',
     englishTranslatedLyrics: 'Is the upcoming sacred wedding celebration an unprecedented glory never seen before? The sacred moment when the heavens descend to earth to bear witness!',
-    difficulty: 'tie-break',
+    difficulty: 'hard',
     hints: ['Lieutenant Ram & Sita Mahalakshmi', 'Music: Vishal Chandrashekhar', 'Grand classical royal marriage proposal'],
     correctAnswer: 'Kaanunna Kalyanam (Sita Ramam)',
     singer: 'Anurag Kulkarni, Sinduri Vishal',
     year: '2022'
   },
   {
-    id: 'tie-2',
+    id: 'hard-ext-2',
     title: 'Tharagathi Gadhi',
     movie: 'Colour Photo (2020)',
     originalTeluguLyric: 'తరగతి గది దాటి వెళ్ళే వేళ.. కలవరింతేదో కన్నుల చుట్టూరా.. కాలమే కరిగిపోయే మాయలో..',
     englishTranslatedLyrics: 'At the hour of stepping beyond the four walls of the classroom, a strange sweet daydream wraps around the eyes in the illusion of melting time!',
-    difficulty: 'tie-break',
+    difficulty: 'hard',
     hints: ['Suhas & Chandini Chowdary', 'Music: Kaala Bhairava', '1990s engineering college nostalgia in Machilipatnam'],
     correctAnswer: 'Tharagathi Gadhi (Colour Photo)',
     singer: 'Kaala Bhairava',
     year: '2020'
   },
   {
-    id: 'tie-3',
+    id: 'hard-ext-3',
     title: 'Sankara Nadam',
     movie: 'Shankarabharanam (1980)',
     originalTeluguLyric: 'శంకరా నాదశరీరాపరా.. వేదవిహారా హరా జీవేశ్వరా..',
     englishTranslatedLyrics: 'O Lord Shankara, whose divine eternal form is the cosmic sound itself! O wanderer of the sacred Vedas, lord of all living souls!',
-    difficulty: 'tie-break',
+    difficulty: 'hard',
     hints: ['Director: K. Viswanath', 'Music: K. V. Mahadevan', 'S. P. Balasubrahmanyam first National Award masterpiece'],
     correctAnswer: 'Sankara Nadam (Shankarabharanam)',
     singer: 'S. P. Balasubrahmanyam',
     year: '1980'
   },
   {
-    id: 'tie-4',
+    id: 'hard-ext-4',
     title: 'Mellaga Karagani',
     movie: 'Varsham (2004)',
     originalTeluguLyric: 'మెల్లగా కరగనీ రెండు మనసుల దూరాన్ని.. చినుకులా కలపనీ తీపి తీపి అనుబంధాన్ని..',
     englishTranslatedLyrics: 'Let the vast distance between two yearning hearts dissolve gently like sweet raindrops uniting a tender eternal bond!',
-    difficulty: 'tie-break',
+    difficulty: 'hard',
     hints: ['Prabhas & Trisha', 'Music: Devi Sri Prasad (DSP)', 'Iconic rain romance classic'],
     correctAnswer: 'Mellaga Karagani (Varsham)',
     singer: 'Sagar, Sumangali',
@@ -334,13 +334,5 @@ export const ROUND_CONFIG = {
     description: 'Metaphorical, deep classical & fast lyrical riddles (2 min timer)',
     badgeColor: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
     accentColor: 'rose'
-  },
-  'tie-break': {
-    name: 'Tie Break Round',
-    duration: 120, // 2 minutes (as requested)
-    points: 25,
-    description: 'Ultimate showdown: High-difficulty songs to decide winner',
-    badgeColor: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-    accentColor: 'purple'
   }
 };

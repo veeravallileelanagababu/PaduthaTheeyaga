@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Clock, Zap, CheckCircle2, Flame, Award } from 'lucide-react';
+import { X, Clock, Zap, CheckCircle2, Award } from 'lucide-react';
 
 interface RulesModalProps {
   isOpen: boolean;
@@ -94,17 +94,6 @@ export const RulesModal: React.FC<RulesModalProps> = ({ isOpen, onClose }) => {
                 </span>
               </li>
             </ul>
-          </div>
-
-          {/* Tie-Break Rules */}
-          <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/30 space-y-2">
-            <div className="flex items-center gap-2 font-bold text-sm text-purple-300">
-              <Flame className="w-4 h-4" />
-              <span>Simultaneous Buzz & Tie Break Round</span>
-            </div>
-            <p className="text-slate-300">
-              If two teams press the buzzer at the exact same moment (within milliseconds) or end in a tie, a <strong>Tie Break Round</strong> is launched featuring tricky, high-difficulty <strong>Hard Level Telugu Songs (2 Minutes)</strong> to decide the definitive winner!
-            </p>
           </div>
         </div>
 

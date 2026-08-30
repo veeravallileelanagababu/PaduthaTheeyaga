@@ -289,13 +289,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     onRefresh();
   };
 
-  const handleTriggerTieBreak = async () => {
-    sounds.playTieAlert();
-    await fetch('/api/admin/trigger-tie-break', { method: 'POST' });
-    setSelectedRound('tie-break');
-    onRefresh();
-  };
-
   const handleRevealAnswer = async () => {
     await fetch('/api/admin/reveal-answer', { method: 'POST' });
     onRefresh();
@@ -567,12 +560,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   1. Select Event Round & Duration
                 </span>
                 <span className="text-xs text-amber-400 font-semibold">
-                  Rule: Easy (1m) • Med (1m30s) • Hard (2m) • Tie (2m)
+                  Rule: Easy (1m) • Med (1m30s) • Hard (2m)
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {(['easy', 'medium', 'hard', 'tie-break'] as Difficulty[]).map((diff) => {
+              <div className="grid grid-cols-3 gap-2.5">
+                {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => {
                   const cfg = ROUND_CONFIG[diff];
                   const isSelected = selectedRound === diff;
                   return (
@@ -692,15 +685,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <span>Reveal Answer</span>
                 </button>
 
-                <button
-                  id="admin-trigger-tie-btn"
-                  type="button"
-                  onClick={handleTriggerTieBreak}
-                  className="flex items-center gap-1.5 px-4 py-3 rounded-xl text-sm font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 hover:bg-purple-500/30 transition cursor-pointer"
-                >
-                  <Flame className="w-4 h-4 text-purple-400" />
-                  <span>Launch Tie-Break</span>
-                </button>
+
               </div>
             </div>
 
@@ -749,25 +734,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </span>
               </div>
 
-              {/* TIE BREAK NOTICE IF DETECTED */}
-              {gameState.isTieBreakDetected && (
-                <div className="p-3.5 rounded-2xl bg-purple-950/80 border-2 border-purple-500/80 text-purple-200 text-xs flex items-center justify-between animate-pulse">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-yellow-400 shrink-0" />
-                    <div>
-                      <strong className="text-white block">TIE BREAK DETECTED!</strong>
-                      Simultaneous buzz by: {gameState.tieTeams.join(' & ')}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleTriggerTieBreak}
-                    className="px-2.5 py-1 rounded-lg bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold text-xs cursor-pointer"
-                  >
-                    Start Tie Break
-                  </button>
-                </div>
-              )}
+
 
               {/* First Buzz Spotlight */}
               {gameState.buzzedTeam ? (
@@ -949,7 +916,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <option value="easy">Easy (1 min)</option>
                     <option value="medium">Medium (1m 30s)</option>
                     <option value="hard">Hard (2 min)</option>
-                    <option value="tie-break">Tie Break (2 min)</option>
                   </select>
                 </div>
               </div>

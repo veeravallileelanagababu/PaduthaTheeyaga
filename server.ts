@@ -299,13 +299,7 @@ app.post('/api/game/buzz', (req, res) => {
     broadcastState();
     return res.json({ success: true, rank: 1, buzzEvent, message: 'You got the Buzzer!' });
   } else {
-    // Another buzz received while already buzzed
-    const firstBuzzTime = gameState.buzzedTeam.serverTimestamp;
-    const diff = Math.abs(now - firstBuzzTime);
-
-    // TIE BREAK DETECTION: If pressed within 40ms of the first buzz
-    const isSimultaneousTie = diff <= 40;
-
+    // Another buzz received while already buzzed (strictly single winner first-come first-served)
     const buzzEvent: BuzzEvent = {
       teamId: team.id,
       teamName: team.teamName,
@@ -313,15 +307,8 @@ app.post('/api/game/buzz', (req, res) => {
       serverTimestamp: now,
       timeRemaining: gameState.timeRemaining,
       reactionTimeMs: reactionTime,
-      isTie: isSimultaneousTie
+      isTie: false
     };
-
-    if (isSimultaneousTie) {
-      gameState.buzzedTeam.isTie = true;
-      gameState.isTieBreakDetected = true;
-      gameState.tieTeams = Array.from(new Set([...gameState.tieTeams, gameState.buzzedTeam.teamName, team.teamName]));
-      gameState.recentActivity = `⚡ TIE DETECTED! ${gameState.buzzedTeam.teamName} & ${team.teamName} buzzed at the exact same moment!`;
-    }
 
     if (!gameState.buzzerQueue.some((b) => b.teamId === team.id)) {
       gameState.buzzerQueue.push(buzzEvent);
@@ -332,8 +319,8 @@ app.post('/api/game/buzz', (req, res) => {
       success: true,
       rank: gameState.buzzerQueue.length,
       buzzEvent,
-      isTie: isSimultaneousTie,
-      message: isSimultaneousTie ? 'Tie Detected with 1st team!' : `Buzzed #${gameState.buzzerQueue.length}`
+      isTie: false,
+      message: `Buzzed #${gameState.buzzerQueue.length}`
     });
   }
 });
@@ -458,32 +445,7 @@ app.post('/api/admin/judge-wrong', (req, res) => {
   res.json({ success: true, lockedTeams: gameState.lockedTeams, resumed: gameState.status === 'running' });
 });
 
-// Admin: Trigger Tie Break Mode (Loads Hard songs pool)
-app.post('/api/admin/trigger-tie-break', (req, res) => {
-  const tieSong = songs.find((s) => s.difficulty === 'tie-break' || s.difficulty === 'hard');
 
-  if (!tieSong) {
-    return res.status(404).json({ success: false, message: 'No tie breaker songs found' });
-  }
-
-  const duration = ROUND_CONFIG['tie-break'].duration; // 120s / 2min
-  gameState.currentRound = 'tie-break';
-  gameState.currentSongId = tieSong.id;
-  gameState.currentSong = tieSong;
-  gameState.initialDuration = duration;
-  gameState.timeRemaining = duration;
-  gameState.buzzedTeam = null;
-  gameState.buzzerQueue = [];
-  gameState.isTieBreakDetected = false;
-  gameState.lockedTeams = [];
-  gameState.status = 'running';
-  gameState.recentActivity = `🔥 TIE BREAKER LAUNCHED! 2-Minute Hard Round for contenders: ${gameState.tieTeams.join(' vs ') || 'All Teams'}`;
-
-  startTimerCountdown();
-  broadcastState();
-
-  res.json({ success: true, gameState, tieSong });
-});
 
 // Admin: Reveal Answer
 app.post('/api/admin/reveal-answer', (req, res) => {
@@ -691,7 +653,7 @@ app.post('/api/songs/bulk', (req, res) => {
         movie: item.movie ? item.movie.trim() : 'Tollywood',
         originalTeluguLyric: item.originalTeluguLyric || '',
         englishTranslatedLyrics: item.englishTranslatedLyrics.trim(),
-        difficulty: (['easy', 'medium', 'hard', 'tie-break'].includes(item.difficulty) ? item.difficulty : 'medium') as Difficulty,
+        difficulty: (['easy', 'medium', 'hard'].includes(item.difficulty) ? item.difficulty : 'medium') as Difficulty,
         hints: Array.isArray(item.hints) ? item.hints : typeof item.hints === 'string' ? item.hints.split(';').map((h: string) => h.trim()) : [],
         correctAnswer: item.correctAnswer || item.title,
         singer: item.singer || '',
@@ -736,7 +698,7 @@ app.post('/api/ai/translate-lyrics', async (req, res) => {
 The event is: "Guess the Telugu Song from its English Translated Lyrics".
 Input Song: "${teluguSongName}" from movie "${movieName || 'Telugu Cinema'}".
 Original Telugu Lines (if provided): "${originalLyrics || ''}".
-Target Difficulty: "${difficulty || 'medium'}" (easy = obvious catchy hookline, medium = poetic/witty line, hard = metaphorical/vintage lines, tie-break = tricky poetic riddles).
+Target Difficulty: "${difficulty || 'medium'}" (easy = obvious catchy hookline, medium = poetic/witty line, hard = metaphorical/vintage lines).
 
 Please generate a structured JSON object with:
 1. "englishTranslatedLyrics": A creative, literal or witty English translation of 2-4 key lyric lines from this Telugu song that college students have to decode. Do NOT include the Telugu song title inside this text.
